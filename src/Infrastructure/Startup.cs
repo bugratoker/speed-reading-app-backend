@@ -39,6 +39,7 @@ public static class Startup
         return services
             .AddApiVersioning()
             .AddAuth(config)
+
             .AddBackgroundJobs(config)
             .AddCaching(config)
             .AddCorsPolicy(config)

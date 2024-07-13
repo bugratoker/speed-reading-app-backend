@@ -20,26 +20,28 @@ internal static class Startup
     internal static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration config)
     {
         services.AddHangfireServer(options => config.GetSection("HangfireSettings:Server").Bind(options));
-
         services.AddHangfireConsoleExtensions();
 
         var storageSettings = config.GetSection("HangfireSettings:Storage").Get<HangfireStorageSettings>();
         if (storageSettings is null) throw new Exception("Hangfire Storage Provider is not configured.");
         if (string.IsNullOrEmpty(storageSettings.StorageProvider)) throw new Exception("Hangfire Storage Provider is not configured.");
         if (string.IsNullOrEmpty(storageSettings.ConnectionString)) throw new Exception("Hangfire Storage Provider ConnectionString is not configured.");
+
         _logger.Information($"Hangfire: Current Storage Provider : {storageSettings.StorageProvider}");
         _logger.Information("For more Hangfire storage, visit https://www.hangfire.io/extensions.html");
 
         services.AddSingleton<JobActivator, FSHJobActivator>();
 
+        // Use the specific method for PostgreSQL storage
         services.AddHangfire((provider, hangfireConfig) => hangfireConfig
-            .UseDatabase(storageSettings.StorageProvider, storageSettings.ConnectionString, config)
+            .UsePostgreSqlStorage(storageSettings.ConnectionString)
             .UseFilter(new FSHJobFilter(provider))
             .UseFilter(new LogJobFilter())
             .UseConsole());
 
         return services;
     }
+
 
     private static IGlobalConfiguration UseDatabase(this IGlobalConfiguration hangfireConfig, string dbProvider, string connectionString, IConfiguration config) =>
         dbProvider.ToLowerInvariant() switch

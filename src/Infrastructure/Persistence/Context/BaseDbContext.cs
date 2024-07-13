@@ -60,8 +60,8 @@ public abstract class BaseDbContext : MultiTenantIdentityDbContext<ApplicationUs
         //}
 
         // Comment the next line while doing migrations or you will get ObjectReferenceNotSetException
-        optionsBuilder.UseDatabase(_dbSettings.DBProvider, TenantInfo.ConnectionString
-            ?? throw new ArgumentNullException(paramName: nameof(TenantInfo.ConnectionString), message: $"Tenant ({TenantInfo.Id})'s connection string is null which should not be possible!"));
+       // optionsBuilder.UseDatabase(_dbSettings.DBProvider, TenantInfo.ConnectionString
+       //     ?? throw new ArgumentNullException(paramName: nameof(TenantInfo.ConnectionString), message: $"Tenant ({TenantInfo.Id})'s connection string is null which should not be possible!"));
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
@@ -69,6 +69,7 @@ public abstract class BaseDbContext : MultiTenantIdentityDbContext<ApplicationUs
         HandleAuditingBeforeSaveChanges(_currentUser.GetUserId());
 
         int result = await base.SaveChangesAsync(cancellationToken);
+
 
         // await HandleAuditingAfterSaveChangesAsync(auditEntries, cancellationToken);
 

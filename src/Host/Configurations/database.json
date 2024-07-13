@@ -1,6 +1,6 @@
 {
   "DatabaseSettings": {
     "DBProvider": "postgresql",
-    "ConnectionString": "Host=localhost;Port=5432;Database=maviDb;Username=postgres;Password=admin;Include Error Detail=true"
+    "ConnectionString": "Host=localhost;Port=5432;Database=root-mavitemplate;Username=postgres;Password=development;Include Error Detail=true"
   }
 }
